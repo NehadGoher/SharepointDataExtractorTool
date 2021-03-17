@@ -80,7 +80,7 @@ namespace ContentTypeExtractor
                 context.ExecuteQuery();
                 cts = context.Web.ContentTypes;
                 ContentTypes = cts.ToList().Select(s => s.Name).ToList();
-                error = "content types retrived Successfully \n";
+                error = "Content types retrived Successfully \n";
                 return ContentTypes;
             }
             catch (Exception ex)
@@ -126,7 +126,7 @@ namespace ContentTypeExtractor
                 string name = Regex.Replace(contentTypeName, @"\s+", "");
                 if (ContentTypes.Contains(name))
                 {
-                    return Regex.Replace(contentTypeName, @"\s+", "") + " already Exists \n";
+                    return "ContentType : " + contentTypeName + " already Exists \n";
                 }
                 else if (ContentTypes.Count > 0)
                 {
@@ -139,8 +139,8 @@ namespace ContentTypeExtractor
                         cts.Add(new SP.ContentTypeCreationInformation {  Name = Regex.Replace(name, @"\s+", ""), ParentContentType = parent});
                     }
                     context.ExecuteQuery();
-                    ContentTypes.Add(name);
-                    return $"contentType : {Regex.Replace(name, @"\s+", "")}, parent : {parentName}\n";
+                    ContentTypes.Add(Regex.Replace(name, @"\s+", ""));
+                    return $"ContentType : {name}, parent : {parentName}\n";
                 }
                 else
                 {
@@ -170,7 +170,7 @@ namespace ContentTypeExtractor
                 string name = Regex.Replace(siteColumnName, @"\s+", "");
                 if (Fields.Contains(name))
                 {
-                    return name + " already Exists in site Column \n";
+                    return "Site Column : " + name + " already Exists\n";
                 }
                 else
                 {
@@ -198,11 +198,11 @@ namespace ContentTypeExtractor
                         cntTyp.Update(true);
                         context.ExecuteQuery();
                         Fields.Add(Regex.Replace(name, @"\s+", ""));
-                        return $"site Column : {name} , for content type : {contentTypeName}\n";
+                        return $"Site Column : {name} , for content type : {contentTypeName}\n";
                     }
                     else
                     {
-                        return $" content type : {contentTypeName} not exists \n";
+                        return $"Content type : {contentTypeName} not exists \n";
 
                     }
                 }
