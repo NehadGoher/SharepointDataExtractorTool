@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace ContentTypeExtractor
 {
-    public class SharePoitnOnlineManager : ISharePointOnlineManager
+    public sealed class SharePoitnOnlineManager : ISharePointOnlineManager
     {
 
         List<string> ContentTypes = new List<string>();
@@ -28,7 +28,7 @@ namespace ContentTypeExtractor
         private void SetCredentials(string username, string password)
         {
             var secureStr = new SecureString();
-            foreach (char c in "Neh@d123")
+            foreach (char c in password)
             {
                 secureStr.AppendChar(c);
             }

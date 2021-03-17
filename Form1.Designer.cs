@@ -71,7 +71,7 @@
             // 
             // buttonLoadData
             // 
-            this.buttonLoadData.Location = new System.Drawing.Point(621, 25);
+            this.buttonLoadData.Location = new System.Drawing.Point(860, 25);
             this.buttonLoadData.Name = "buttonLoadData";
             this.buttonLoadData.Size = new System.Drawing.Size(125, 39);
             this.buttonLoadData.TabIndex = 4;
@@ -84,13 +84,13 @@
             this.richTextBox1.Location = new System.Drawing.Point(28, 109);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(718, 472);
+            this.richTextBox1.Size = new System.Drawing.Size(957, 472);
             this.richTextBox1.TabIndex = 6;
             this.richTextBox1.Text = "";
             // 
             // deleteDataBtn
             // 
-            this.deleteDataBtn.Location = new System.Drawing.Point(621, 70);
+            this.deleteDataBtn.Location = new System.Drawing.Point(860, 70);
             this.deleteDataBtn.Name = "deleteDataBtn";
             this.deleteDataBtn.Size = new System.Drawing.Size(125, 33);
             this.deleteDataBtn.TabIndex = 7;
@@ -112,7 +112,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(774, 611);
+            this.ClientSize = new System.Drawing.Size(997, 611);
             this.Controls.Add(this.test_btn);
             this.Controls.Add(this.deleteDataBtn);
             this.Controls.Add(this.richTextBox1);

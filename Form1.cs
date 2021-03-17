@@ -20,23 +20,20 @@ namespace ContentTypeExtractor
     public partial class Form1 : Form
     {
         ExcelFileManager excel = null;
-        SharePoitnOnlineManager spManager = new SharePoitnOnlineManager("https://mylinkdev.sharepoint.com/sites/DDADMS");
+        SharePoitnOnlineManager spManager = null;
         string error = string.Empty;
 
         StringBuilder testlibName = new StringBuilder("testLib");
-        public Form1()
+        public Form1(SharePoitnOnlineManager spManager)
         {
+            this.spManager = spManager;
             InitializeComponent();
-            this.openFileDialog2 = new OpenFileDialog();
-            spManager.ConnectToSharePoint("nehad.goher@mylinkdev.onmicrosoft.com","Neh@d123",out error);
+            //spManager.ConnectToSharePoint("nehad.goher@mylinkdev.onmicrosoft.com","Neh@d123",out error);
             this.richTextBox1.AppendText(error);
         }
 
         
-        int iRow, iCol = 2;
-
-       // List<string> ContentTypes = new List<string>();
-       // List<string> Fields = new List<string>();
+        
 
         // browse
         private void button1_Click(object sender, EventArgs e)
@@ -79,7 +76,7 @@ namespace ContentTypeExtractor
                     rowStart = 2;
                     CreateColumnsInContentType(rowStart, xlWorkSheet);
                 }
-                this.richTextBox1.AppendText("----------------------------\n");
+                this.richTextBox1.AppendText("Finished ----------------------------\n");
             }
             else
             {
@@ -92,7 +89,7 @@ namespace ContentTypeExtractor
             List<string> ContentTypes = spManager.GetContentTypesName(out error);
             /// if any error happens during retriving the data
             this.richTextBox1.AppendText(error);
-            for (iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
+            for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
             {
                 if (xlWorkSheet.Cells[iRow, 1].value == null)
                 {
@@ -119,7 +116,7 @@ namespace ContentTypeExtractor
             /// if any error happens during retriving the data
             this.richTextBox1.AppendText(error);
 
-            for (iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
+            for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
             {
                 if (xlWorkSheet.Cells[iRow, 1].value == null)
                 {
@@ -145,7 +142,7 @@ namespace ContentTypeExtractor
             List<string> lists = spManager.GetLists(out error);
             /// if any error happens during retriving the data
             this.richTextBox1.AppendText(error);
-            for (iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
+            for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
             {
                 if (xlWorkSheet.Cells[iRow, 1].value == null)
                 {
@@ -199,7 +196,7 @@ namespace ContentTypeExtractor
             List<string> Fields = spManager.GetSiteColumnsName(out error);
             /// if any error happens during retriving the data
             this.richTextBox1.AppendText(error);
-            for (iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
+            for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
             {
                 if (xlWorkSheet.Cells[iRow, 1].value == null)
                 {
@@ -224,7 +221,7 @@ namespace ContentTypeExtractor
             List<string> ContentTypes = spManager.GetContentTypesName(out error);
             /// if any error happens during retriving the data
             this.richTextBox1.AppendText(error);
-            for (iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
+            for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
             {
                 if (xlWorkSheet.Cells[iRow, 1].value == null)
                 {
