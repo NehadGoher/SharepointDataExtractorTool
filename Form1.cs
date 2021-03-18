@@ -23,6 +23,8 @@ namespace ContentTypeExtractor
         SharePoitnOnlineManager spManager = null;
         string error = string.Empty;
 
+        Action<int, Excel.Worksheet> ProcessingMethod;
+
         StringBuilder testlibName = new StringBuilder("testLib");
         public Form1(SharePoitnOnlineManager spManager)
         {
@@ -32,6 +34,21 @@ namespace ContentTypeExtractor
             this.richTextBox1.AppendText(error);
         }
 
+        // browse
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog2.ShowDialog() == DialogResult.OK && !String.IsNullOrWhiteSpace(openFileDialog2.FileName))
+            {
+                this.richTextBox1.AppendText("Opening file .....\n");
+                excel = new ExcelFileManager(openFileDialog2.FileName);
+                string res = excel.OpenFileExcel();
+                this.richTextBox1.AppendText(res);
+            }
+            else
+            {
+                this.richTextBox1.AppendText("File Dialog can't be opened \n");
+            }
+        }
         private void CreateContentTypes(int rowStart, Excel.Worksheet xlWorkSheet)
         {
             List<string> ContentTypes = spManager.GetContentTypesName(out error);
@@ -170,87 +187,50 @@ namespace ContentTypeExtractor
 
         private void bt_createContentType_Click(object sender, EventArgs e)
         {
-            if(excel != null)
-            {
-                Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName("Library Mapping");
-                this.richTextBox1.AppendText("retriving the data of the sheet .... \n");
-                CreateContentTypes(3, xlWorkSheet);
-                this.richTextBox1.AppendText("Finished ----------------------------\n");
-            }
-            else
-            {
-                MessageBox.Show("Must Select file Excel");
-            }
-            
+            ProcessingMethod = CreateContentTypes;
+            PreProcessing(3, "Library Mapping", ProcessingMethod);
         }
 
         private void btn_createSiteColumn_Click(object sender, EventArgs e)
         {
-            if (excel != null)
-            {
-                Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName("DFTC Content Types");
-                this.richTextBox1.AppendText("retriving the data of the sheet .... \n");
-                CreateColumnsInContentType(2, xlWorkSheet);
-                this.richTextBox1.AppendText("Finished ----------------------------\n");
-            }
-            else
-            {
-                MessageBox.Show("Must Select file Excel");
-            }
+            ProcessingMethod = CreateColumnsInContentType;
+            PreProcessing(2, "DFTC Content Types", ProcessingMethod);
         }
 
         private void btn_createLibrary_Click(object sender, EventArgs e)
         {
-            if (excel != null)
-            {
-                Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName("DFTC Content Types");
-                this.richTextBox1.AppendText("retriving the data of the sheet .... \n");
-                CreateContentTypes(12, xlWorkSheet);
-                this.richTextBox1.AppendText("Finished ----------------------------\n");
-            }
-            else
-            {
-                MessageBox.Show("Must Select file Excel");
-            }
+
+            ProcessingMethod = CreateContentTypes;
+            PreProcessing(12, "DFTC Content Types", ProcessingMethod);
         }
 
         private void btn_deleteContentTypes_Click(object sender, EventArgs e)
         {
-            if (excel != null)
-            {
-                Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName("Library Mapping");
-                this.richTextBox1.AppendText("retriving the data of the sheet .... \n");
-                CreateContentTypes(3, xlWorkSheet);
-                this.richTextBox1.AppendText("Finished ----------------------------\n");
-            }
-            else
-            {
-                MessageBox.Show("Must Select file Excel");
-            }
+            ProcessingMethod = RemoveContentTypes;
+            PreProcessing(3, "Library Mapping", ProcessingMethod);
         }
 
         private void btn_deleteSiteColumn_Click(object sender, EventArgs e)
         {
-            if (excel != null)
-            {
-                Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName("DFTC Content Types");
-                this.richTextBox1.AppendText("retriving the data of the sheet .... \n");
-                RemoveSiteColmun(2, xlWorkSheet);
-                this.richTextBox1.AppendText("Finished ----------------------------\n");
-            }
-            else
-            {
-                MessageBox.Show("Must Select file Excel");
-            }
+            ProcessingMethod = RemoveSiteColmun;
+            PreProcessing(2, "DFTC Content Types", ProcessingMethod);
         }
 
         private void btn_deleteLibrary_Click(object sender, EventArgs e)
         {
+            ProcessingMethod = RemoveSiteColmun;
+           // PreProcessing(13, "Library Mapping", ProcessingMethod);
+           
+        }
+
+        private void PreProcessing (int row,string sheetName, Action<int, Excel.Worksheet> creation)
+        {
+            this.richTextBox1.AppendText("Start processing ......\n");
             if (excel != null)
             {
-                Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName("Library Mapping");
+                Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName(sheetName);
                 this.richTextBox1.AppendText("retriving the data of the sheet .... \n");
-               /// Remo(13, xlWorkSheet);
+                creation(row, xlWorkSheet);
                 this.richTextBox1.AppendText("Finished ----------------------------\n");
             }
             else
@@ -258,25 +238,7 @@ namespace ContentTypeExtractor
                 MessageBox.Show("Must Select file Excel");
             }
         }
-
-        //// browse
-        //private void button1_Click(object sender, EventArgs e)
-        //{
-        //    if (openFileDialog2.ShowDialog() == DialogResult.OK && !String.IsNullOrWhiteSpace(openFileDialog2.FileName))
-        //    {
-        //        this.richTextBox1.AppendText("Opening file .....\n");
-        //        excel = new ExcelFileManager(openFileDialog2.FileName);
-        //       string res = excel.OpenFileExcel();
-        //       this.richTextBox1.AppendText(res);
-        //        /// get sheets name for combo box
-        //        this.comboBox1.Items.Clear();
-        //        excel.GetSheetsName().ForEach(sheet => this.comboBox1.Items.Add(sheet));
-        //    }
-        //      else
-        //     {
-        //        this.richTextBox1.AppendText("File Dialog can't be opened \n");
-        //      }
-        //}
+        
 
         //// load data
         //private void button2_Click(object sender, EventArgs e)

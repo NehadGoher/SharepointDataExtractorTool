@@ -59,7 +59,7 @@
             this.richTextBox1.Location = new System.Drawing.Point(28, 108);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(1029, 473);
+            this.richTextBox1.Size = new System.Drawing.Size(801, 473);
             this.richTextBox1.TabIndex = 6;
             this.richTextBox1.Text = "";
             // 
@@ -75,7 +75,7 @@
             // 
             // bt_createContentType
             // 
-            this.bt_createContentType.Location = new System.Drawing.Point(611, 15);
+            this.bt_createContentType.Location = new System.Drawing.Point(385, 25);
             this.bt_createContentType.Name = "bt_createContentType";
             this.bt_createContentType.Size = new System.Drawing.Size(167, 39);
             this.bt_createContentType.TabIndex = 9;
@@ -85,7 +85,7 @@
             // 
             // btn_createSiteColumn
             // 
-            this.btn_createSiteColumn.Location = new System.Drawing.Point(785, 15);
+            this.btn_createSiteColumn.Location = new System.Drawing.Point(559, 25);
             this.btn_createSiteColumn.Name = "btn_createSiteColumn";
             this.btn_createSiteColumn.Size = new System.Drawing.Size(144, 39);
             this.btn_createSiteColumn.TabIndex = 10;
@@ -95,7 +95,7 @@
             // 
             // btn_createLibrary
             // 
-            this.btn_createLibrary.Location = new System.Drawing.Point(935, 15);
+            this.btn_createLibrary.Location = new System.Drawing.Point(709, 25);
             this.btn_createLibrary.Name = "btn_createLibrary";
             this.btn_createLibrary.Size = new System.Drawing.Size(120, 39);
             this.btn_createLibrary.TabIndex = 11;
@@ -105,7 +105,7 @@
             // 
             // btn_deleteContentTypes
             // 
-            this.btn_deleteContentTypes.Location = new System.Drawing.Point(611, 59);
+            this.btn_deleteContentTypes.Location = new System.Drawing.Point(385, 69);
             this.btn_deleteContentTypes.Name = "btn_deleteContentTypes";
             this.btn_deleteContentTypes.Size = new System.Drawing.Size(167, 33);
             this.btn_deleteContentTypes.TabIndex = 12;
@@ -115,7 +115,7 @@
             // 
             // btn_deleteSiteColumn
             // 
-            this.btn_deleteSiteColumn.Location = new System.Drawing.Point(784, 60);
+            this.btn_deleteSiteColumn.Location = new System.Drawing.Point(558, 70);
             this.btn_deleteSiteColumn.Name = "btn_deleteSiteColumn";
             this.btn_deleteSiteColumn.Size = new System.Drawing.Size(145, 33);
             this.btn_deleteSiteColumn.TabIndex = 13;
@@ -125,7 +125,7 @@
             // 
             // btn_deleteLibrary
             // 
-            this.btn_deleteLibrary.Location = new System.Drawing.Point(935, 59);
+            this.btn_deleteLibrary.Location = new System.Drawing.Point(709, 69);
             this.btn_deleteLibrary.Name = "btn_deleteLibrary";
             this.btn_deleteLibrary.Size = new System.Drawing.Size(120, 33);
             this.btn_deleteLibrary.TabIndex = 14;
@@ -137,7 +137,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1069, 611);
+            this.ClientSize = new System.Drawing.Size(851, 611);
             this.Controls.Add(this.btn_deleteLibrary);
             this.Controls.Add(this.btn_deleteSiteColumn);
             this.Controls.Add(this.btn_deleteContentTypes);
