@@ -21,7 +21,7 @@ namespace ContentTypeExtractor
     {
         ExcelFileManager excel = null;
         SharePoitnOnlineManager spManager = null;
-        string error = string.Empty;
+        string result = string.Empty;
 
         Action<int, Excel.Worksheet> ProcessingMethod;
 
@@ -30,8 +30,8 @@ namespace ContentTypeExtractor
         {
             this.spManager = spManager;
             InitializeComponent();
-            //spManager.ConnectToSharePoint("nehad.goher@mylinkdev.onmicrosoft.com","Neh@d123",out error);
-            this.richTextBox1.AppendText(error);
+            //spManager.ConnectToSharePoint("nehad.goher@mylinkdev.onmicrosoft.com","Neh@d123",out result);
+            this.richTextBox1.AppendText(result);
         }
 
         // browse
@@ -51,9 +51,9 @@ namespace ContentTypeExtractor
         }
         private void CreateContentTypes(int rowStart, Excel.Worksheet xlWorkSheet)
         {
-            List<string> ContentTypes = spManager.GetContentTypesName(out error);
-            /// if any error happens during retriving the data
-            this.richTextBox1.AppendText(error);
+            List<string> ContentTypes = spManager.GetContentTypesName(out result);
+            /// if any result happens during retriving the data
+            this.richTextBox1.AppendText(result);
             for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
             {
                 if (xlWorkSheet.Cells[iRow, 1].value == null)
@@ -68,8 +68,8 @@ namespace ContentTypeExtractor
                     {
                         parentName = (string)xlWorkSheet.Cells[iRow, 2].value;
                     }
-                    error = spManager.CreateContentType(contentTypeame, parentName);
-                    this.richTextBox1.AppendText(error);
+                    result = spManager.CreateContentType(contentTypeame, parentName);
+                    this.richTextBox1.AppendText(result);
                 }
             }
         }
@@ -77,9 +77,9 @@ namespace ContentTypeExtractor
         private void CreateColumnsInContentType(int rowStart, Excel.Worksheet xlWorkSheet)
         {
 
-            List<string> Fields = spManager.GetSiteColumnsName(out error);
-            /// if any error happens during retriving the data
-            this.richTextBox1.AppendText(error);
+            List<string> Fields = spManager.GetSiteColumnsName(out result);
+            /// if any result happens during retriving the data
+            this.richTextBox1.AppendText(result);
 
             for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
             {
@@ -94,8 +94,8 @@ namespace ContentTypeExtractor
                     string name = (string)xlWorkSheet.Cells[iRow, 2].value;
                     string type = (string)xlWorkSheet.Cells[iRow, 3].value;
                     bool isRequired = ((string)xlWorkSheet.Cells[iRow, 4].value == "Mandatory") ? true : false;
-                    error = spManager.CreateSiteColumn(name.Trim(), contentType.Trim(), type.Trim(), isRequired, "DFTC Site Column");
-                    this.richTextBox1.AppendText(error);
+                    result = spManager.CreateSiteColumn(name.Trim(), contentType.Trim(), type.Trim(), isRequired, "DFTC Site Column");
+                    this.richTextBox1.AppendText(result);
                 }
             }
 
@@ -104,9 +104,11 @@ namespace ContentTypeExtractor
         /// still under testing
         private void CreateLibrary(int rowStart, Excel.Worksheet xlWorkSheet)
         {
-            List<string> lists = spManager.GetLists(out error);
-            /// if any error happens during retriving the data
-            this.richTextBox1.AppendText(error);
+            List<string> lists = spManager.GetLists(out result);
+            this.richTextBox1.AppendText(result);
+            spManager.GetContentTypesName(out result);
+            /// if any result happens during retriving the data
+            this.richTextBox1.AppendText(result);
             for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
             {
                 if (xlWorkSheet.Cells[iRow, 1].value == null)
@@ -117,8 +119,11 @@ namespace ContentTypeExtractor
                 {
                     string name = (string)xlWorkSheet.Cells[iRow, 1].value;
                     string contentType = (string)xlWorkSheet.Cells[iRow, 2].value;
-                    error = spManager.AddContentTypeToListByNames(contentType.Trim(),name.Trim());
-                    this.richTextBox1.AppendText(error);
+                  
+                    result = spManager.CreateLibrary(name.Trim());
+                    this.richTextBox1.AppendText(result);
+                    result = spManager.AddContentTypeToListByNames(contentType.Trim(),name.Trim());
+                      this.richTextBox1.AppendText(result);
                 }
             }
 
@@ -127,12 +132,12 @@ namespace ContentTypeExtractor
         private void RemoveSiteColmun(int rowStart, Excel.Worksheet xlWorkSheet)
         {
             this.richTextBox1.AppendText("Deleting .....\n");
-            List<string> ContentTypes = spManager.GetContentTypesName(out error);
-            /// if any error happens during retriving the data
-            this.richTextBox1.AppendText(error);
-            List<string> Fields = spManager.GetSiteColumnsName(out error);
-            /// if any error happens during retriving the data
-            this.richTextBox1.AppendText(error);
+            List<string> ContentTypes = spManager.GetContentTypesName(out result);
+            /// if any result happens during retriving the data
+            this.richTextBox1.AppendText(result);
+            List<string> Fields = spManager.GetSiteColumnsName(out result);
+            /// if any result happens during retriving the data
+            this.richTextBox1.AppendText(result);
             for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
             {
                 if (xlWorkSheet.Cells[iRow, 1].value == null)
@@ -145,8 +150,8 @@ namespace ContentTypeExtractor
                     string name = (string)xlWorkSheet.Cells[iRow, 2].value;
                     string type = (string)xlWorkSheet.Cells[iRow, 3].value;
                     bool isRequired = ((string)xlWorkSheet.Cells[iRow, 4].value == "Mandatory") ? true : false;
-                    error = spManager.DeleteSiteColumnFromContentType(Regex.Replace(contentType, @"\s+", "").Trim(), Regex.Replace(name, @"\s+", "").Trim(), type);
-                    this.richTextBox1.AppendText(error);
+                    result = spManager.DeleteSiteColumnFromContentType(Regex.Replace(contentType, @"\s+", "").Trim(), Regex.Replace(name, @"\s+", "").Trim(), type);
+                    this.richTextBox1.AppendText(result);
                 }
             }
 
@@ -155,9 +160,9 @@ namespace ContentTypeExtractor
         private void RemoveContentTypes(int rowStart, Excel.Worksheet xlWorkSheet)
         {
             this.richTextBox1.AppendText("Deleting .....\n");
-            List<string> ContentTypes = spManager.GetContentTypesName(out error);
-            /// if any error happens during retriving the data
-            this.richTextBox1.AppendText(error);
+            List<string> ContentTypes = spManager.GetContentTypesName(out result);
+            /// if any result happens during retriving the data
+            this.richTextBox1.AppendText(result);
             for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
             {
                 if (xlWorkSheet.Cells[iRow, 1].value == null)
@@ -168,8 +173,30 @@ namespace ContentTypeExtractor
                 {
                     string contentTypeName = (string)xlWorkSheet.Cells[iRow, 1].value;
                     
-                    error = spManager.DeleteContentTypesWithName(Regex.Replace(contentTypeName, @"\s+", "").Trim());
-                    this.richTextBox1.AppendText(error);
+                    result = spManager.DeleteContentTypesWithName(Regex.Replace(contentTypeName, @"\s+", "").Trim());
+                    this.richTextBox1.AppendText(result);
+                }
+            }
+        }
+
+        private void RemoveLibrary(int rowStart, Excel.Worksheet xlWorkSheet)
+        {
+            this.richTextBox1.AppendText("Deleting .....\n");
+            List<string> Lst = spManager.GetLists(out result);
+            /// if any result happens during retriving the data
+            this.richTextBox1.AppendText(result);
+            for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
+            {
+                if (xlWorkSheet.Cells[iRow, 1].value == null)
+                {
+                    break;      // BREAK LOOP.
+                }
+                else
+                {
+                    string lib = (string)xlWorkSheet.Cells[iRow, 1].value;
+
+                    result = spManager.DeleteList(Regex.Replace(lib, @"\s+", "").Trim());
+                    this.richTextBox1.AppendText(result);
                 }
             }
         }
@@ -177,7 +204,11 @@ namespace ContentTypeExtractor
         private void test_btn_Click(object sender, EventArgs e)
         {
             testlibName.Append(Guid.NewGuid());
-            spManager.AddContentTypeToListByNames(testlibName.ToString(),"TestList");
+            spManager.GetLists(out string res);
+            spManager.GetContentTypesName(out res);
+            this.richTextBox1.AppendText(res);
+            res = spManager.AddContentTypeToListByNames(testlibName.ToString(), "CreaturesList");
+            this.richTextBox1.AppendText(res);
         }
 
         private void Form1_Closing(object sender, CancelEventArgs e)
@@ -200,8 +231,8 @@ namespace ContentTypeExtractor
         private void btn_createLibrary_Click(object sender, EventArgs e)
         {
 
-            ProcessingMethod = CreateContentTypes;
-            PreProcessing(12, "DFTC Content Types", ProcessingMethod);
+            ProcessingMethod = CreateLibrary;
+            PreProcessing(12, "Library Mapping", ProcessingMethod);
         }
 
         private void btn_deleteContentTypes_Click(object sender, EventArgs e)
@@ -218,19 +249,18 @@ namespace ContentTypeExtractor
 
         private void btn_deleteLibrary_Click(object sender, EventArgs e)
         {
-            ProcessingMethod = RemoveSiteColmun;
-           // PreProcessing(13, "Library Mapping", ProcessingMethod);
-           
+            ProcessingMethod = RemoveLibrary;
+            PreProcessing(13, "Library Mapping", ProcessingMethod);
         }
 
-        private void PreProcessing (int row,string sheetName, Action<int, Excel.Worksheet> creation)
+        private void PreProcessing (int row,string sheetName, Action<int, Excel.Worksheet> processing)
         {
             this.richTextBox1.AppendText("Start processing ......\n");
             if (excel != null)
             {
                 Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName(sheetName);
                 this.richTextBox1.AppendText("retriving the data of the sheet .... \n");
-                creation(row, xlWorkSheet);
+                processing(row, xlWorkSheet);
                 this.richTextBox1.AppendText("Finished ----------------------------\n");
             }
             else

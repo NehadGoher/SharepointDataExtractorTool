@@ -41,28 +41,28 @@ namespace ContentTypeExtractor
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
-        /// <param name="error"> what happens during process</param>
+        /// <param name="result"> what happens during process</param>
         /// <returns></returns>
-        public bool ConnectToSharePoint(string username, string password,out string error)
+        public bool ConnectToSharePoint(string username, string password,out string result)
         {
             try
             {
-                error = String.Empty;
+                result = String.Empty;
                 if (username.Length >0 && password.Length > 0)
                 {
                     SetCredentials(username, password);
                     context.Load(context.Web);
-                    error = $"Connected to {context.Url} using username : {username}\n";
+                    result = $"Connected to {context.Url} using username : {username}\n";
                 }
                 else
                 {
-                    error = "Please set username and password to connect";
+                    result = "Please set username and password to connect";
                 }
                 return true;
             }
             catch (Exception ex)
             {
-                error = ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
+                result = ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
                 return false;
             }
         }
@@ -70,9 +70,9 @@ namespace ContentTypeExtractor
         /// <summary>
         /// load from context content types and return list of their names
         /// </summary>
-        /// <param name="error"></param>
+        /// <param name="result"></param>
         /// <returns>list of content type name</returns>
-        public List<string> GetContentTypesName(out string error)
+        public List<string> GetContentTypesName(out string result)
         {
             try
             {
@@ -80,12 +80,12 @@ namespace ContentTypeExtractor
                 context.ExecuteQuery();
                 cts = context.Web.ContentTypes;
                 ContentTypes = cts.ToList().Select(s => s.Name).ToList();
-                error = "Content types retrived Successfully \n";
+                result = "Content types retrived Successfully \n";
                 return ContentTypes;
             }
             catch (Exception ex)
             {
-                error = ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
+                result = ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
                 return ContentTypes;
             }
         }
@@ -93,9 +93,9 @@ namespace ContentTypeExtractor
         /// <summary>
         /// load site column from context 
         /// </summary>
-        /// <param name="error"> out the error of what happen</param>
+        /// <param name="result"> out the result of what happen</param>
         /// <returns>list of string from site columns</returns>
-        public List<string> GetSiteColumnsName(out string error)
+        public List<string> GetSiteColumnsName(out string result)
         {
             try
             {
@@ -103,12 +103,12 @@ namespace ContentTypeExtractor
                 context.ExecuteQuery();
                 flds = context.Web.Fields;
                 Fields = flds.ToList().Select(s => s.InternalName).ToList();
-                error = "Site column retrived Successfully \n";
+                result = "Site column retrived Successfully \n";
                 return Fields;
             }
             catch (Exception ex)
             {
-                error = ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
+                result = ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
                 return Fields;
             }
         }
@@ -118,7 +118,7 @@ namespace ContentTypeExtractor
         /// </summary>
         /// <param name="contentTypeName"></param>
         /// <param name="parentName"></param>
-        /// <returns> of error or result of what happens </returns>
+        /// <returns> of result or result of what happens </returns>
         public string CreateContentType(string contentTypeName, string parentName = "Item")
         {
             try
@@ -162,7 +162,7 @@ namespace ContentTypeExtractor
         /// <param name="isRequired"></param>
         /// <param name="group"></param>
         /// <param name="isHidden"></param>
-        /// <returns>of error or result of what happens</returns>
+        /// <returns>of result or result of what happens</returns>
         public string CreateSiteColumn(string siteColumnName, string contentTypeName, string type, bool isRequired, string group, bool isHidden = false)
         {
             try
@@ -217,22 +217,22 @@ namespace ContentTypeExtractor
         /// <summary>
         /// get all lists in sharepoint
         /// </summary>
-        /// <param name="error"></param>
+        /// <param name="result"></param>
         /// <returns>list of list</returns>
-        public List<string> GetLists(out string error)
+        public List<string> GetLists(out string result)
         {
             try
             {
-                error = String.Empty;
+                result = String.Empty;
                 context.Load(context.Web.Lists);
                 context.ExecuteQuery();
                 lst = context.Web.Lists;
-                spList = lst.ToList().Select(s => s.EntityTypeName).ToList();
+                spList = lst.ToList().Select(s => s.Title).ToList();
                 return spList;
             }
             catch (Exception ex)
             {
-                error = ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
+                result = ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
                 return spList;
             }
         }
@@ -242,26 +242,26 @@ namespace ContentTypeExtractor
         /// </summary>
         /// <param name="contentTypeName"></param>
         /// <param name="listName"></param>
-        /// <returns>error happens in adding</returns>
+        /// <returns>result happens in adding</returns>
         public string AddContentTypeToListByNames( string contentTypeName, string listName)
         {
             try
             {
                 if(!string.IsNullOrWhiteSpace(contentTypeName) && !string.IsNullOrWhiteSpace(listName))
                 {
-                    var contentType = cts.Where(s => s.Name == Regex.Replace(contentTypeName, @"\s+", "")).FirstOrDefault();
-                    var list = lst.Where(s => s.EntityTypeName == Regex.Replace(listName, @"\s+", "")).FirstOrDefault();
-                    if (contentType == null) return $"{contentTypeName} can't be found";
-                    if (list == null) return $"{listName} can't be found";
+                    var list = lst.ToList().Where(s => s.Title == Regex.Replace(listName, @"\s+", "")).FirstOrDefault();
+                    if (list == null) return $"Library : {listName} can't be found\n";
+                    var contentType = cts.ToList().Where(s => s.Name == Regex.Replace(contentTypeName, @"\s+", "")).FirstOrDefault();
+                    if (contentType == null) return $"Content type : {contentTypeName} can't be found\n";
                     list.ContentTypesEnabled = true;
                     list.Update();
                     list.ContentTypes.AddExistingContentType(contentType);
                     context.ExecuteQuery();
-                    return string.Empty;
+                    return $"Library : {listName} Linked to {contentTypeName}\n";
                 }
                 else
                 {
-                    return "contentTypeName and list name must have value \n";
+                    return "ContentTypeName and list name must have value \n";
                 }
             }catch(Exception ex)
             {
@@ -367,6 +367,70 @@ namespace ContentTypeExtractor
                 return $"{contentTypeName} failed to be deleted \n"; 
             }
 
+        }
+
+        /// <summary>
+        /// Create library with name
+        /// </summary>
+        /// <param name="Title"></param>
+        /// <param name="Desc"></param>
+        /// <returns></returns>
+        public string CreateLibrary(string Title, string Desc = "")
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(Title))
+                {
+                    if (spList.Any(l=> l==Title))
+                    {
+                        return $"Library : {Title} already exists\n";
+                    }
+                    else
+                    {
+                        SP.ListCreationInformation newLibrary = new SP.ListCreationInformation()
+                        {
+                            Title = Title,
+                            Description = Desc,
+                            TemplateType = (int)SP.ListTemplateType.DocumentLibrary
+                        };  
+                        lst.Add(newLibrary);
+                        context.Load(lst);
+                        context.ExecuteQuery();
+                        spList.Add(Title);
+                        return $"Library : {Title} Created successfully\n";
+                    }
+                }
+                return "Must Enter Valid title list and desc\n";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
+            }
+
+        }
+
+        public string DeleteList( string listName)
+        {
+            try
+            {
+                if ( !string.IsNullOrWhiteSpace(listName))
+                {
+                     var lib =lst.ToList().Where(l=>l.Title == listName).FirstOrDefault();
+                    if (lib == null) return $"Library : {listName} doesn't exist\n";
+                    lib.DeleteObject();
+                    context.ExecuteQuery();
+                    return $"Library : {listName} deleted successfully\n";
+                }
+                else
+                {
+                    return "Library name must have value \n";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
+            }
         }
     }
 }
