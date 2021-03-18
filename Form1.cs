@@ -30,6 +30,7 @@ namespace ContentTypeExtractor
         {
             this.spManager = spManager;
             InitializeComponent();
+            //this.bindingNavigator1.BindingSource = new 
             //spManager.ConnectToSharePoint("nehad.goher@mylinkdev.onmicrosoft.com","Neh@d123",out result);
             this.richTextBox1.AppendText(result);
         }
@@ -43,6 +44,7 @@ namespace ContentTypeExtractor
                 excel = new ExcelFileManager(openFileDialog2.FileName);
                 string res = excel.OpenFileExcel();
                 this.richTextBox1.AppendText(res);
+              
             }
             else
             {
@@ -101,7 +103,6 @@ namespace ContentTypeExtractor
 
         }
 
-        /// still under testing
         private void CreateLibrary(int rowStart, Excel.Worksheet xlWorkSheet)
         {
             List<string> lists = spManager.GetLists(out result);
@@ -203,12 +204,19 @@ namespace ContentTypeExtractor
 
         private void test_btn_Click(object sender, EventArgs e)
         {
-            testlibName.Append(Guid.NewGuid());
-            spManager.GetLists(out string res);
-            spManager.GetContentTypesName(out res);
-            this.richTextBox1.AppendText(res);
-            res = spManager.AddContentTypeToListByNames(testlibName.ToString(), "CreaturesList");
-            this.richTextBox1.AppendText(res);
+            if(excel != null)
+            {
+                this.richTextBox1.AppendText("Loading data to show into the lists\n");
+                this.listContent.DataSource = LoadDataFromSheet(3,1, "Library Mapping");
+                this.listSite.DataSource = LoadDataFromSheet(2,2, "DFTC Content Types");
+                this.listLib.DataSource = LoadDataFromSheet(12,2, "Library Mapping");
+                this.richTextBox1.AppendText("Finnished ----------\n");
+            }
+            else
+            {
+                MessageBox.Show("Must select excel file");
+            }
+          
         }
 
         private void Form1_Closing(object sender, CancelEventArgs e)
@@ -218,39 +226,36 @@ namespace ContentTypeExtractor
 
         private void bt_createContentType_Click(object sender, EventArgs e)
         {
-            ProcessingMethod = CreateContentTypes;
-            PreProcessing(3, "Library Mapping", ProcessingMethod);
+            //if ()
+            //{
+                PreProcessing(3, "Library Mapping", CreateContentTypes);
+            //}
+            
         }
 
         private void btn_createSiteColumn_Click(object sender, EventArgs e)
         {
-            ProcessingMethod = CreateColumnsInContentType;
-            PreProcessing(2, "DFTC Content Types", ProcessingMethod);
+            PreProcessing(2, "DFTC Content Types", CreateColumnsInContentType);
         }
 
         private void btn_createLibrary_Click(object sender, EventArgs e)
         {
-
-            ProcessingMethod = CreateLibrary;
-            PreProcessing(12, "Library Mapping", ProcessingMethod);
+            PreProcessing(12, "Library Mapping", CreateLibrary);
         }
 
         private void btn_deleteContentTypes_Click(object sender, EventArgs e)
         {
-            ProcessingMethod = RemoveContentTypes;
-            PreProcessing(3, "Library Mapping", ProcessingMethod);
+            PreProcessing(3, "Library Mapping", RemoveContentTypes);
         }
 
         private void btn_deleteSiteColumn_Click(object sender, EventArgs e)
         {
-            ProcessingMethod = RemoveSiteColmun;
-            PreProcessing(2, "DFTC Content Types", ProcessingMethod);
+            PreProcessing(2, "DFTC Content Types", RemoveSiteColmun);
         }
 
         private void btn_deleteLibrary_Click(object sender, EventArgs e)
         {
-            ProcessingMethod = RemoveLibrary;
-            PreProcessing(13, "Library Mapping", ProcessingMethod);
+            PreProcessing(13, "Library Mapping", RemoveLibrary);
         }
 
         private void PreProcessing (int row,string sheetName, Action<int, Excel.Worksheet> processing)
@@ -268,7 +273,34 @@ namespace ContentTypeExtractor
                 MessageBox.Show("Must Select file Excel");
             }
         }
-        
+
+        private void btn_clear_Click(object sender, EventArgs e)
+        {
+            this.listContent.SelectedIndices.Clear();
+            this.listSite.SelectedIndices.Clear();
+            this.listLib.SelectedIndices.Clear();
+        }
+
+        private List<string> LoadDataFromSheet(int startRow,int colVal ,string sheetName)
+        {
+            List<string> data = new List<string>();
+            var xlWorkSheet = excel.GetExcelSheetByName(sheetName);
+            for (int iRow = startRow; iRow <= xlWorkSheet.Rows.Count; iRow++)
+            {
+                if (xlWorkSheet.Cells[iRow, colVal].value == null)
+                {
+                    break;      // BREAK LOOP.
+                }
+                else
+                {
+                    string contentTypeName = (string)xlWorkSheet.Cells[iRow, colVal].value;
+                    data.Add(contentTypeName);
+                }
+            }
+            return data;
+        }
+
+       
 
         //// load data
         //private void button2_Click(object sender, EventArgs e)
