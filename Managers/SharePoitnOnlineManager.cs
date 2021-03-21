@@ -168,19 +168,24 @@ namespace ContentTypeExtractor
             try
             {
                 string name = Regex.Replace(siteColumnName, @"\s+", "");
+                contentTypeName = Regex.Replace(contentTypeName, @"\s+", "");
+                //if (flds.to.Where(s=>s))
+                //{
+
+                //}
                 if (Fields.Contains(name))
                 {
-                    return "Site Column : " + name + " already Exists\n";
+                    return "Site Column : " + siteColumnName + " already Exists\n";
                 }
                 else
                 {
                     /// check if content type for site column is exists
-                    if (ContentTypes.Contains(Regex.Replace(contentTypeName, @"\s+", "")))
+                    if (ContentTypes.Contains(contentTypeName))
                     {
 
                         string fieldAsXml =
-                            $@"<Field ID=""{{{Guid.NewGuid()}}}"" Name=""{Regex.Replace(name, @"\s+", "")}"" " +
-                            $@"DisplayName=""{name}"" " +
+                            $@"<Field ID=""{{{Guid.NewGuid()}}}"" Name=""{name}"" " +
+                            $@"DisplayName=""{siteColumnName}"" " +
                             $@"Type=""{type}"" Hidden=""{false}"" " +
                             $@"Required=""{isRequired}"" Group=""{group}"" />";
 
@@ -198,7 +203,7 @@ namespace ContentTypeExtractor
                         cntTyp.Update(true);
                         context.ExecuteQuery();
                         Fields.Add(Regex.Replace(name, @"\s+", ""));
-                        return $"Site Column : {name} , for content type : {contentTypeName}\n";
+                        return $"Site Column : {siteColumnName} , for content type : {contentTypeName}\n";
                     }
                     else
                     {

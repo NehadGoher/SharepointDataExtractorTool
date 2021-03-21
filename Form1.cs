@@ -194,8 +194,8 @@ namespace ContentTypeExtractor
                 else
                 {
                     string lib = (string)xlWorkSheet.Cells[iRow, 1].value;
-
-                    result = spManager.DeleteList(Regex.Replace(lib, @"\s+", "").Trim());
+                    lib = Regex.Replace(lib, @"\s+", "").Trim();
+                    result = spManager.DeleteList(lib);
                     this.richTextBox1.AppendText(result);
                 }
             }
