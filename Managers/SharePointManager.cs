@@ -8,10 +8,11 @@ using System.Security;
 using System.Text.RegularExpressions;
 using ContentTypeExtractor.Contracts;
 using System.Reflection;
+using Microsoft.SharePoint;
 
 namespace ContentTypeExtractor
 {
-    public sealed class SharePoitnOnlineManager : ISharePointOnlineManager
+    public sealed class SharePointManager : ISharePointManager
     {
 
         List<string> ContentTypes = new List<string>();
@@ -22,8 +23,11 @@ namespace ContentTypeExtractor
         private SP.ContentTypeCollection cts;
         private SP.FieldCollection flds;
         private SP.ListCollection lst;
-
-        public SharePoitnOnlineManager(string url)=> context = new SP.ClientContext(url);
+        string URL;
+        public SharePointManager(string url){
+            this.URL = url;
+            context = new SP.ClientContext(url);
+        }
 
         private void SetCredentials(string username, string password)
         {
@@ -33,6 +37,16 @@ namespace ContentTypeExtractor
                 secureStr.AppendChar(c);
             }
             context.Credentials = new SP.SharePointOnlineCredentials(username, secureStr);
+        }
+
+        private void SetCredentials(string username, string password, string domain)
+        {
+            var secureStr = new SecureString();
+            foreach (char c in password)
+            {
+                secureStr.AppendChar(c);
+            }
+            context.Credentials = new System.Net.NetworkCredential(username, secureStr, domain);
         }
 
         /// <summary>
@@ -51,6 +65,30 @@ namespace ContentTypeExtractor
                 if (username.Length >0 && password.Length > 0)
                 {
                     SetCredentials(username, password);
+                    context.Load(context.Web);
+                    result = $"Connected to {context.Url} using username : {username}\n";
+                }
+                else
+                {
+                    result = "Please set username and password to connect";
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                result = ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
+                return false;
+            }
+        }
+
+        public bool ConnectToSharePoint(string username, string password,string domain , out string result)
+        {
+            try
+            {
+                result = String.Empty;
+                if (username.Length > 0 && password.Length > 0)
+                {
+                    SetCredentials(username, password, domain);
                     context.Load(context.Web);
                     result = $"Connected to {context.Url} using username : {username}\n";
                 }
@@ -242,6 +280,7 @@ namespace ContentTypeExtractor
             }
         }
         
+
         /// <summary>
         /// add content type to a list in share point
         /// </summary>
@@ -437,5 +476,89 @@ namespace ContentTypeExtractor
                 return ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
             }
         }
+
+        public SP.List GetListByName(string name, out string result)
+        {
+            try
+            {
+                context.Load(context.Web.Lists);
+                context.ExecuteQuery();
+                var spList = context.Web.Lists.GetByTitle(name);
+                if (spList == null)
+                {
+                    result = $"Library : {name} doesn't exist\n";
+                    return null;
+                }
+                result = $"Library : {name} retrived succesfully\n";
+                return spList;
+            }
+            catch (Exception ex)
+            {
+                result = ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
+                return null;
+            }
+        }
+        public SP.Folder GetFolder(string name)
+        {
+            SP.Folder SubFolder = context.Web.GetFolderByServerRelativeUrl(URL + name);
+            context.Load(SubFolder);
+            string fileName = "FileName";
+            SP.File file = SubFolder.Files.Where(s => s.Name == "PLO-C-700001-103").FirstOrDefault();
+            context.Load(file);
+            //query.Query = "<Where><Contains><FieldRef Name=\"Title\" /><Value Type=\"Text\">" + fileName + "</Value></Contains></Where>";
+            //query.Folder = SubFolder;  // This should restrict the query to the subfolder
+            // context.ExecuteQuery();
+            // var x= SubFolder.Name;
+            //SP.ListItemCollection files = list.GetItems(query);
+            return SubFolder;
+        }
+
+        /// <summary>
+        ///  take library and item needed to be deleted
+        /// </summary>
+        /// <param name="lib"></param>
+        /// <param name="item"></param>
+        /// <param name="result"></param>
+        /// <returns> what happens during process and print on the UI</returns>
+        public bool DeleteItemFromFolder (SP.List lib,string item,out string result)
+        {
+            try
+            {
+                
+                SP.CamlQuery camlQuery = new SP.CamlQuery();
+               string query =
+                    $"<Eq><FieldRef Name='Title'/><Value Type='Text'>{item.TrimStart(' ').TrimEnd(' ')}</Value></Eq>";
+                camlQuery.ViewXml = @"<View Scope='RecursiveAll'><Query><Where>" + query + "</Where></Query></View>";
+                var transactionItemsList = lib.GetItems(camlQuery);
+                context.Load(transactionItemsList);
+                context.ExecuteQuery();
+                var listItems = lib.GetItems(camlQuery);
+                context.Load(listItems);
+                context.ExecuteQuery();
+
+                if(listItems != null && listItems.Count()>0)
+                {
+                    // delete all the reference of the file
+                    foreach (var listitem in listItems)
+                    {
+                        listitem.DeleteObject();
+                        context.ExecuteQuery();
+                    }
+                    result = $"Document: {item} successfully deleted\n";
+                    return true;
+                }
+
+                result = $"Document: {item} doesn't exist\n";
+                return false;
+            }
+            catch (Exception ex)
+            {
+
+                result = ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
+                return false;
+            }
+        }
+
     }
+
 }

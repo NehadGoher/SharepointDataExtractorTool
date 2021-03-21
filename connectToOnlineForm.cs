@@ -19,20 +19,25 @@ namespace ContentTypeExtractor
         public connectToOnlineForm()
         {
             InitializeComponent();
-            this.txtbx_url.Text = "https://mylinkdev.sharepoint.com/sites/DDADMS";
-            this.txtbx_username.Text = "nehad.goher@mylinkdev.onmicrosoft.com";
-            this.txtbx_password.Text = "Neh@d123";
+            //this.txtbx_url.Text = "https://mylinkdev.sharepoint.com/sites/DDADMS";
+            //this.txtbx_username.Text = "nehad.goher@mylinkdev.onmicrosoft.com";
+            //this.txtbx_password.Text = "Neh@d123";
+            this.txtbx_url.Text = "http://mofstgspwf1/sites/ArchiveDMSPOC";
+            this.txtbx_username.Text = "sSP_Farm";
+            this.txtbx_password.Text = "p@SSW0RD";
             this.label_status.Text = "Not Connection";
+           
         }
+        string domain = "cc.mof.gov.kw";
 
         private void btn_login_Click(object sender, EventArgs e)
         {
             if (ValidateInputs())
             {
-                SharePoitnOnlineManager manager = new SharePoitnOnlineManager(url);
+                SharePointManager manager = new SharePointManager(url);
                 
                 this.label_status.Text = "Connecting .....";
-                if (manager.ConnectToSharePoint(username,password,out string res))
+                if (manager.ConnectToSharePoint(username,password, domain, out string res))
                 {
                     this.Hide();
                     form = new Form1(manager);

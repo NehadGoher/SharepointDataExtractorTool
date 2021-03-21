@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.SharePoint.Client;
 
 namespace ContentTypeExtractor.Contracts
 {
-    interface ISharePointOnlineManager
+    interface ISharePointManager
     {
         
         bool ConnectToSharePoint(string username, string password, out string result);
@@ -19,6 +20,8 @@ namespace ContentTypeExtractor.Contracts
         string DeleteSiteColumnFromContentType(string contentTypeName, string fieldTitle, string fieldType);
         string DeleteContentTypesWithName(string contentType);
         string CreateLibrary(string Title, string Desc);
+        List GetListByName(string name, out string result);
+        bool DeleteItemFromFolder(List lib, string item, out string result);
         //string DeleteList(string contentTypeName, string listName);
     }
 }
