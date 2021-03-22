@@ -52,6 +52,7 @@ namespace ContentTypeExtractor
                 {
                     SetCredentials(username, password);
                     context.Load(context.Web);
+                    context.ExecuteQuery();
                     result = $"Connected to {context.Url} using username : {username}\n";
                 }
                 else
@@ -431,6 +432,11 @@ namespace ContentTypeExtractor
 
                 return ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
             }
+        }
+
+        public void Dispose()
+        {
+            context.Dispose();
         }
     }
 }

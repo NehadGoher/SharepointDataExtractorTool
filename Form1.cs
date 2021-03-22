@@ -23,15 +23,11 @@ namespace ContentTypeExtractor
         SharePoitnOnlineManager spManager = null;
         string result = string.Empty;
 
-        Action<int, Excel.Worksheet> ProcessingMethod;
-
         StringBuilder testlibName = new StringBuilder("testLib");
         public Form1(SharePoitnOnlineManager spManager)
         {
             this.spManager = spManager;
             InitializeComponent();
-            //this.bindingNavigator1.BindingSource = new 
-            //spManager.ConnectToSharePoint("nehad.goher@mylinkdev.onmicrosoft.com","Neh@d123",out result);
             this.richTextBox1.AppendText(result);
         }
 
@@ -44,7 +40,6 @@ namespace ContentTypeExtractor
                 excel = new ExcelFileManager(openFileDialog2.FileName);
                 string res = excel.OpenFileExcel();
                 this.richTextBox1.AppendText(res);
-              
             }
             else
             {
@@ -91,7 +86,6 @@ namespace ContentTypeExtractor
                 }
                 else
                 {
-                    
                     string contentType = (string)xlWorkSheet.Cells[iRow, 1].value;
                     string name = (string)xlWorkSheet.Cells[iRow, 2].value;
                     string type = (string)xlWorkSheet.Cells[iRow, 3].value;
@@ -210,6 +204,7 @@ namespace ContentTypeExtractor
                 this.listContent.DataSource = LoadDataFromSheet(3,1, "Library Mapping");
                 this.listSite.DataSource = LoadDataFromSheet(2,2, "DFTC Content Types");
                 this.listLib.DataSource = LoadDataFromSheet(12,2, "Library Mapping");
+                ClearAllSelected();
                 this.richTextBox1.AppendText("Finnished ----------\n");
             }
             else
@@ -276,11 +271,15 @@ namespace ContentTypeExtractor
 
         private void btn_clear_Click(object sender, EventArgs e)
         {
+            ClearAllSelected();
+        }
+
+        private void ClearAllSelected()
+        {
             this.listContent.SelectedIndices.Clear();
             this.listSite.SelectedIndices.Clear();
             this.listLib.SelectedIndices.Clear();
         }
-
         private List<string> LoadDataFromSheet(int startRow,int colVal ,string sheetName)
         {
             List<string> data = new List<string>();
@@ -300,64 +299,16 @@ namespace ContentTypeExtractor
             return data;
         }
 
-       
 
-        //// load data
-        //private void button2_Click(object sender, EventArgs e)
-        //{
-        //    // must select sheet name
-        //    string SheetName = this.comboBox1.GetItemText(this.comboBox1.SelectedItem?.ToString() ?? "");
-        //    if (SheetName.Length > 0)
-        //    {
-        //        Excel.Worksheet  xlWorkSheet = excel.GetExcelSheetByName(SheetName);
-        //        this.richTextBox1.AppendText("retriving the data of the sheet .... \n");
-        //        int rowStart;
-        //        /// create content type
-        //        if (SheetName.Contains("Library"))
-        //        {
-        //            rowStart = 3;
-        //            CreateContentTypes(rowStart, xlWorkSheet);
-        //        }
-        //        else
-        //        {
-        //            /// create column in content type
-        //            rowStart = 2;
-        //            CreateColumnsInContentType(rowStart, xlWorkSheet);
-        //        }
-        //        this.richTextBox1.AppendText("Finished ----------------------------\n");
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Must Select Sheet Name from the excel file");
-        //    }
-        //}
 
-        //private void deleteDataBtn_Click(object sender, EventArgs e)
-        //{
-        //    string SheetName = this.comboBox1.GetItemText(this.comboBox1.SelectedItem?.ToString() ?? "");
-        //    if (SheetName.Length > 0)
-        //    {
-        //        this.richTextBox1.AppendText("Reteriving required data.... \n");
-        //        Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName(SheetName);
-        //        int rowStart;
-        //        /// create content type
-        //        if (SheetName.Contains("Library"))
-        //        {
-        //            rowStart = 3;
-        //            RemoveContentTypes(rowStart, xlWorkSheet);
-        //        }
-        //        else
-        //        {
-        //            /// create column in content type
-        //            rowStart = 2;
-        //            RemoveSiteColmun(rowStart, xlWorkSheet);
-        //        }
-        //        this.richTextBox1.AppendText("Finished ----------------------------\n");
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Must Select Sheet Name from the excel file");
-        //    }
-        //}
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            if(excel != null)
+            {
+                spManager.Dispose();
+                excel.ReleaseFileResources();
+            }
+        }
     }
 }
