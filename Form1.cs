@@ -20,13 +20,13 @@ namespace ContentTypeExtractor
     public partial class Form1 : Form
     {
         ExcelFileManager excel = null;
-        SharePoitnOnlineManager spManager = null;
+        SharePointOnlineManager spManager = null;
         string result = string.Empty;
 
         Action<int, Excel.Worksheet> ProcessingMethod;
 
         StringBuilder testlibName = new StringBuilder("testLib");
-        public Form1(SharePoitnOnlineManager spManager)
+        public Form1(SharePointOnlineManager spManager)
         {
             this.spManager = spManager;
             InitializeComponent();
@@ -268,64 +268,15 @@ namespace ContentTypeExtractor
                 MessageBox.Show("Must Select file Excel");
             }
         }
-        
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            if (excel != null)
+            {
+                spManager.Dispose();
+                excel.ReleaseFileResources();
+            }
+        }
 
-        //// load data
-        //private void button2_Click(object sender, EventArgs e)
-        //{
-        //    // must select sheet name
-        //    string SheetName = this.comboBox1.GetItemText(this.comboBox1.SelectedItem?.ToString() ?? "");
-        //    if (SheetName.Length > 0)
-        //    {
-        //        Excel.Worksheet  xlWorkSheet = excel.GetExcelSheetByName(SheetName);
-        //        this.richTextBox1.AppendText("retriving the data of the sheet .... \n");
-        //        int rowStart;
-        //        /// create content type
-        //        if (SheetName.Contains("Library"))
-        //        {
-        //            rowStart = 3;
-        //            CreateContentTypes(rowStart, xlWorkSheet);
-        //        }
-        //        else
-        //        {
-        //            /// create column in content type
-        //            rowStart = 2;
-        //            CreateColumnsInContentType(rowStart, xlWorkSheet);
-        //        }
-        //        this.richTextBox1.AppendText("Finished ----------------------------\n");
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Must Select Sheet Name from the excel file");
-        //    }
-        //}
-
-        //private void deleteDataBtn_Click(object sender, EventArgs e)
-        //{
-        //    string SheetName = this.comboBox1.GetItemText(this.comboBox1.SelectedItem?.ToString() ?? "");
-        //    if (SheetName.Length > 0)
-        //    {
-        //        this.richTextBox1.AppendText("Reteriving required data.... \n");
-        //        Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName(SheetName);
-        //        int rowStart;
-        //        /// create content type
-        //        if (SheetName.Contains("Library"))
-        //        {
-        //            rowStart = 3;
-        //            RemoveContentTypes(rowStart, xlWorkSheet);
-        //        }
-        //        else
-        //        {
-        //            /// create column in content type
-        //            rowStart = 2;
-        //            RemoveSiteColmun(rowStart, xlWorkSheet);
-        //        }
-        //        this.richTextBox1.AppendText("Finished ----------------------------\n");
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Must Select Sheet Name from the excel file");
-        //    }
-        //}
     }
 }

@@ -29,7 +29,7 @@ namespace ContentTypeExtractor
         {
             if (ValidateInputs())
             {
-                SharePoitnOnlineManager manager = new SharePoitnOnlineManager(url);
+                SharePointOnlineManager manager = new SharePointOnlineManager(url);
                 
                 this.label_status.Text = "Connecting .....";
                 if (manager.ConnectToSharePoint(username,password,out string res))

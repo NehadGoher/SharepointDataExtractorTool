@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace ContentTypeExtractor
 {
-    public sealed class SharePoitnOnlineManager : ISharePointOnlineManager
+    public sealed class SharePointOnlineManager : ISharePointOnlineManager
     {
 
         List<string> ContentTypes = new List<string>();
@@ -23,7 +23,7 @@ namespace ContentTypeExtractor
         private SP.FieldCollection flds;
         private SP.ListCollection lst;
 
-        public SharePoitnOnlineManager(string url)=> context = new SP.ClientContext(url);
+        public SharePointOnlineManager(string url)=> context = new SP.ClientContext(url);
 
         private void SetCredentials(string username, string password)
         {
@@ -52,6 +52,7 @@ namespace ContentTypeExtractor
                 {
                     SetCredentials(username, password);
                     context.Load(context.Web);
+                    context.ExecuteQuery();
                     result = $"Connected to {context.Url} using username : {username}\n";
                 }
                 else
@@ -436,6 +437,11 @@ namespace ContentTypeExtractor
 
                 return ex.Message.ToString() + $" in {MethodBase.GetCurrentMethod()}\n";
             }
+        }
+
+        public void Dispose()
+        {
+            context.Dispose();
         }
     }
 }

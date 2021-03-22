@@ -78,7 +78,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Managers\SharePoitnOnlineManager.cs" />
+    <Compile Include="Managers\SharePointOnlineManager.cs" />
     <EmbeddedResource Include="connectToOnlineForm.resx">
       <DependentUpon>connectToOnlineForm.cs</DependentUpon>
     </EmbeddedResource>
