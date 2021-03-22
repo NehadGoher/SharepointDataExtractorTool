@@ -45,6 +45,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // openFileDialog2
@@ -66,7 +67,7 @@
             this.richTextBox1.Location = new System.Drawing.Point(621, 131);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(450, 446);
+            this.richTextBox1.Size = new System.Drawing.Size(522, 446);
             this.richTextBox1.TabIndex = 6;
             this.richTextBox1.Text = "";
             // 
@@ -82,7 +83,7 @@
             // 
             // bt_createContentType
             // 
-            this.bt_createContentType.Location = new System.Drawing.Point(621, 44);
+            this.bt_createContentType.Location = new System.Drawing.Point(701, 44);
             this.bt_createContentType.Name = "bt_createContentType";
             this.bt_createContentType.Size = new System.Drawing.Size(167, 39);
             this.bt_createContentType.TabIndex = 9;
@@ -92,7 +93,7 @@
             // 
             // btn_createSiteColumn
             // 
-            this.btn_createSiteColumn.Location = new System.Drawing.Point(795, 44);
+            this.btn_createSiteColumn.Location = new System.Drawing.Point(875, 44);
             this.btn_createSiteColumn.Name = "btn_createSiteColumn";
             this.btn_createSiteColumn.Size = new System.Drawing.Size(144, 39);
             this.btn_createSiteColumn.TabIndex = 10;
@@ -102,7 +103,7 @@
             // 
             // btn_createLibrary
             // 
-            this.btn_createLibrary.Location = new System.Drawing.Point(945, 44);
+            this.btn_createLibrary.Location = new System.Drawing.Point(1025, 44);
             this.btn_createLibrary.Name = "btn_createLibrary";
             this.btn_createLibrary.Size = new System.Drawing.Size(120, 39);
             this.btn_createLibrary.TabIndex = 11;
@@ -112,7 +113,7 @@
             // 
             // btn_deleteContentTypes
             // 
-            this.btn_deleteContentTypes.Location = new System.Drawing.Point(621, 88);
+            this.btn_deleteContentTypes.Location = new System.Drawing.Point(701, 88);
             this.btn_deleteContentTypes.Name = "btn_deleteContentTypes";
             this.btn_deleteContentTypes.Size = new System.Drawing.Size(167, 33);
             this.btn_deleteContentTypes.TabIndex = 12;
@@ -122,7 +123,7 @@
             // 
             // btn_deleteSiteColumn
             // 
-            this.btn_deleteSiteColumn.Location = new System.Drawing.Point(794, 89);
+            this.btn_deleteSiteColumn.Location = new System.Drawing.Point(874, 89);
             this.btn_deleteSiteColumn.Name = "btn_deleteSiteColumn";
             this.btn_deleteSiteColumn.Size = new System.Drawing.Size(145, 33);
             this.btn_deleteSiteColumn.TabIndex = 13;
@@ -132,7 +133,7 @@
             // 
             // btn_deleteLibrary
             // 
-            this.btn_deleteLibrary.Location = new System.Drawing.Point(945, 88);
+            this.btn_deleteLibrary.Location = new System.Drawing.Point(1025, 88);
             this.btn_deleteLibrary.Name = "btn_deleteLibrary";
             this.btn_deleteLibrary.Size = new System.Drawing.Size(120, 33);
             this.btn_deleteLibrary.TabIndex = 14;
@@ -204,11 +205,21 @@
             this.label3.TabIndex = 21;
             this.label3.Text = "Libraries Lists";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(698, 24);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(432, 17);
+            this.label4.TabIndex = 22;
+            this.label4.Text = "if any content type selected from list will create it with its site column";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1083, 611);
+            this.ClientSize = new System.Drawing.Size(1155, 611);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -252,6 +263,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
     }
 }
 

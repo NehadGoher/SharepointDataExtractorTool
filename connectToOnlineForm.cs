@@ -22,16 +22,15 @@ namespace ContentTypeExtractor
             this.txtbx_url.Text = "https://mylinkdev.sharepoint.com/sites/DDADMS";
             this.txtbx_username.Text = "nehad.goher@mylinkdev.onmicrosoft.com";
             this.txtbx_password.Text = "Neh@d123";
-            this.label_status.Text = "Not Connection";
+            this.label_status.Text = "No Connection";
         }
 
         private void btn_login_Click(object sender, EventArgs e)
         {
             if (ValidateInputs())
             {
-                SharePoitnOnlineManager manager = new SharePoitnOnlineManager(url);
-                
                 this.label_status.Text = "Connecting .....";
+                SharePoitnOnlineManager manager = new SharePoitnOnlineManager(url);
                 if (manager.ConnectToSharePoint(username,password,out string res))
                 {
                     this.Hide();
@@ -44,7 +43,6 @@ namespace ContentTypeExtractor
                     this.label_status.ForeColor = Color.Red;
                     this.label_status.Text = res;
                 }
-                
             }
         }
 

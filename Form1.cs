@@ -28,12 +28,15 @@ namespace ContentTypeExtractor
         {
             this.spManager = spManager;
             InitializeComponent();
+            this.listLib.Enabled = false;
+            this.listSite.Enabled = false;
             this.richTextBox1.AppendText(result);
         }
 
         // browse
         private void button1_Click(object sender, EventArgs e)
         {
+            ToggleAllButtons();
             if (openFileDialog2.ShowDialog() == DialogResult.OK && !String.IsNullOrWhiteSpace(openFileDialog2.FileName))
             {
                 this.richTextBox1.AppendText("Opening file .....\n");
@@ -45,10 +48,12 @@ namespace ContentTypeExtractor
             {
                 this.richTextBox1.AppendText("File Dialog can't be opened \n");
             }
+            ToggleAllButtons(true);
         }
         private void CreateContentTypes(int rowStart, Excel.Worksheet xlWorkSheet)
         {
             List<string> ContentTypes = spManager.GetContentTypesName(out result);
+            string selectedContentType = this.listContent.SelectedItem?.ToString()??"".Trim();
             /// if any result happens during retriving the data
             this.richTextBox1.AppendText(result);
             for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
@@ -59,21 +64,29 @@ namespace ContentTypeExtractor
                 }
                 else
                 {
-                    string contentTypeame = (string)xlWorkSheet.Cells[iRow, 1].value;
+                    string contentTypeName = (string)xlWorkSheet.Cells[iRow, 1].value;
                     string parentName = "Item";
                     if (iRow > 3)
                     {
                         parentName = (string)xlWorkSheet.Cells[iRow, 2].value;
                     }
-                    result = spManager.CreateContentType(contentTypeame, parentName);
-                    this.richTextBox1.AppendText(result);
+                    if (  string.IsNullOrWhiteSpace(selectedContentType)|| contentTypeName.Trim() == selectedContentType)
+                    {
+                        result = spManager.CreateContentType(contentTypeName, parentName);
+                        this.richTextBox1.AppendText(result);
+                    }
+                    
                 }
+            }
+            if (!string.IsNullOrWhiteSpace(selectedContentType))
+            {
+                CreateColumnsInContentType(2, excel.GetExcelSheetByName("DFTC Content Types"));
             }
         }
 
         private void CreateColumnsInContentType(int rowStart, Excel.Worksheet xlWorkSheet)
         {
-
+            string selectedContentType = this.listContent.SelectedItem?.ToString() ?? "";
             List<string> Fields = spManager.GetSiteColumnsName(out result);
             /// if any result happens during retriving the data
             this.richTextBox1.AppendText(result);
@@ -90,10 +103,14 @@ namespace ContentTypeExtractor
                     string name = (string)xlWorkSheet.Cells[iRow, 2].value;
                     string type = (string)xlWorkSheet.Cells[iRow, 3].value;
                     bool isRequired = ((string)xlWorkSheet.Cells[iRow, 4].value == "Mandatory") ? true : false;
-                    result = spManager.CreateSiteColumn(name.Trim(), contentType.Trim(), type.Trim(), isRequired, "DFTC Site Column");
-                    this.richTextBox1.AppendText(result);
+                    if (string.IsNullOrWhiteSpace(selectedContentType) || contentType.Trim() == selectedContentType)
+                    {
+                        result = spManager.CreateSiteColumn(name.Trim(), contentType.Trim(), type.Trim(), isRequired, "DFTC Site Column");
+                        this.richTextBox1.AppendText(result);
+                    }
+                        
                 }
-            }
+            } 
 
         }
 
@@ -195,15 +212,16 @@ namespace ContentTypeExtractor
                 }
             }
         }
-
+        /// load data
         private void test_btn_Click(object sender, EventArgs e)
         {
-            if(excel != null)
+            ToggleAllButtons();
+            if (excel != null)
             {
                 this.richTextBox1.AppendText("Loading data to show into the lists\n");
                 this.listContent.DataSource = LoadDataFromSheet(3,1, "Library Mapping");
                 this.listSite.DataSource = LoadDataFromSheet(2,2, "DFTC Content Types");
-                this.listLib.DataSource = LoadDataFromSheet(12,2, "Library Mapping");
+                this.listLib.DataSource = LoadDataFromSheet(12,1, "Library Mapping");
                 ClearAllSelected();
                 this.richTextBox1.AppendText("Finnished ----------\n");
             }
@@ -211,7 +229,7 @@ namespace ContentTypeExtractor
             {
                 MessageBox.Show("Must select excel file");
             }
-          
+            ToggleAllButtons(true);
         }
 
         private void Form1_Closing(object sender, CancelEventArgs e)
@@ -221,36 +239,44 @@ namespace ContentTypeExtractor
 
         private void bt_createContentType_Click(object sender, EventArgs e)
         {
-            //if ()
-            //{
-                PreProcessing(3, "Library Mapping", CreateContentTypes);
-            //}
-            
+            ToggleAllButtons();
+            PreProcessing(3, "Library Mapping", CreateContentTypes);
+            ToggleAllButtons(true);
         }
 
         private void btn_createSiteColumn_Click(object sender, EventArgs e)
         {
+            ToggleAllButtons();
             PreProcessing(2, "DFTC Content Types", CreateColumnsInContentType);
+            ToggleAllButtons(true);
         }
 
         private void btn_createLibrary_Click(object sender, EventArgs e)
         {
+            ToggleAllButtons();
             PreProcessing(12, "Library Mapping", CreateLibrary);
+            ToggleAllButtons(true);
         }
 
         private void btn_deleteContentTypes_Click(object sender, EventArgs e)
         {
+            ToggleAllButtons();
             PreProcessing(3, "Library Mapping", RemoveContentTypes);
+            ToggleAllButtons(true);
         }
 
         private void btn_deleteSiteColumn_Click(object sender, EventArgs e)
         {
+            ToggleAllButtons();
             PreProcessing(2, "DFTC Content Types", RemoveSiteColmun);
+            ToggleAllButtons(true);
         }
 
         private void btn_deleteLibrary_Click(object sender, EventArgs e)
         {
+            ToggleAllButtons();
             PreProcessing(13, "Library Mapping", RemoveLibrary);
+            ToggleAllButtons(true);
         }
 
         private void PreProcessing (int row,string sheetName, Action<int, Excel.Worksheet> processing)
@@ -299,8 +325,6 @@ namespace ContentTypeExtractor
             return data;
         }
 
-
-
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
@@ -309,6 +333,13 @@ namespace ContentTypeExtractor
                 spManager.Dispose();
                 excel.ReleaseFileResources();
             }
+        }
+
+        private void ToggleAllButtons(bool flag = false)
+        {
+            this.btn_clear.Enabled = this.btn_createLibrary.Enabled = this.btn_createSiteColumn.Enabled
+                = this.btn_deleteContentTypes.Enabled = this.btn_deleteLibrary.Enabled = this.btn_deleteSiteColumn.Enabled
+                = this.test_btn.Enabled = this.bt_createContentType.Enabled =this.buttonBrowse.Enabled = flag;
         }
     }
 }
