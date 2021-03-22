@@ -23,14 +23,18 @@ namespace ContentTypeExtractor
         SharePointOnlineManager spManager = null;
         string result = string.Empty;
 
-        Action<int, Excel.Worksheet> ProcessingMethod;
+        const string ContentTypeSheetName = "Library Mapping";
+        const string LibrarySheetName = "Library Mapping";
+        const string SiteColumnSheetName = "DFTC Content Types";
 
-        StringBuilder testlibName = new StringBuilder("testLib");
+        const int ContentStartRow = 3;
+        const int SiteStartRow = 2;
+        const int LibraryStartRow = 12;
+
         public Form1(SharePointOnlineManager spManager)
         {
             this.spManager = spManager;
             InitializeComponent();
-            //spManager.ConnectToSharePoint("nehad.goher@mylinkdev.onmicrosoft.com","Neh@d123",out result);
             this.richTextBox1.AppendText(result);
         }
 
@@ -101,7 +105,6 @@ namespace ContentTypeExtractor
 
         }
 
-        /// still under testing
         private void CreateLibrary(int rowStart, Excel.Worksheet xlWorkSheet)
         {
             List<string> lists = spManager.GetLists(out result);
@@ -201,57 +204,46 @@ namespace ContentTypeExtractor
             }
         }
 
-        private void test_btn_Click(object sender, EventArgs e)
-        {
-            testlibName.Append(Guid.NewGuid());
-            spManager.GetLists(out string res);
-            spManager.GetContentTypesName(out res);
-            this.richTextBox1.AppendText(res);
-            res = spManager.AddContentTypeToListByNames(testlibName.ToString(), "CreaturesList");
-            this.richTextBox1.AppendText(res);
-        }
-
-        private void Form1_Closing(object sender, CancelEventArgs e)
-        {
-            excel.ReleaseFileResources();
-            spManager.Dispose();
-        }
-
         private void bt_createContentType_Click(object sender, EventArgs e)
         {
-            ProcessingMethod = CreateContentTypes;
-            PreProcessing(3, "Library Mapping", ProcessingMethod);
+            ToggleAllButtons();
+            PreProcessing(ContentStartRow, ContentTypeSheetName, CreateContentTypes);
+            ToggleAllButtons(true);
         }
 
         private void btn_createSiteColumn_Click(object sender, EventArgs e)
         {
-            ProcessingMethod = CreateColumnsInContentType;
-            PreProcessing(2, "DFTC Content Types", ProcessingMethod);
+            ToggleAllButtons();
+            PreProcessing(SiteStartRow, SiteColumnSheetName, CreateColumnsInContentType);
+            ToggleAllButtons(true);
         }
 
         private void btn_createLibrary_Click(object sender, EventArgs e)
         {
-
-            ProcessingMethod = CreateLibrary;
-            PreProcessing(12, "Library Mapping", ProcessingMethod);
+            ToggleAllButtons();
+            PreProcessing(LibraryStartRow, LibrarySheetName, CreateLibrary);
+            ToggleAllButtons(true);
         }
 
         private void btn_deleteContentTypes_Click(object sender, EventArgs e)
         {
-            ProcessingMethod = RemoveContentTypes;
-            PreProcessing(3, "Library Mapping", ProcessingMethod);
+            ToggleAllButtons();
+            PreProcessing(ContentStartRow, ContentTypeSheetName, RemoveContentTypes);
+            ToggleAllButtons(true);
         }
 
         private void btn_deleteSiteColumn_Click(object sender, EventArgs e)
         {
-            ProcessingMethod = RemoveSiteColmun;
-            PreProcessing(2, "DFTC Content Types", ProcessingMethod);
+            ToggleAllButtons();
+            PreProcessing(SiteStartRow, SiteColumnSheetName, RemoveSiteColmun);
+            ToggleAllButtons(true);
         }
 
         private void btn_deleteLibrary_Click(object sender, EventArgs e)
         {
-            ProcessingMethod = RemoveLibrary;
-            PreProcessing(13, "Library Mapping", ProcessingMethod);
+            ToggleAllButtons();
+            PreProcessing(LibraryStartRow, LibrarySheetName, RemoveLibrary);
+            ToggleAllButtons(true);
         }
 
         private void PreProcessing (int row,string sheetName, Action<int, Excel.Worksheet> processing)
@@ -269,14 +261,22 @@ namespace ContentTypeExtractor
                 MessageBox.Show("Must Select file Excel");
             }
         }
+
+        private void ToggleAllButtons(bool flag = false)
+        {
+             this.btn_createLibrary.Enabled = this.btn_createSiteColumn.Enabled
+                = this.btn_deleteContentTypes.Enabled = this.btn_deleteLibrary.Enabled = this.btn_deleteSiteColumn.Enabled
+                =  this.bt_createContentType.Enabled = this.buttonBrowse.Enabled = flag;
+        }
+
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
             if (excel != null)
             {
-                spManager.Dispose();
                 excel.ReleaseFileResources();
             }
+                spManager.Dispose();
         }
 
     }

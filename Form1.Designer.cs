@@ -31,7 +31,6 @@
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.buttonBrowse = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.test_btn = new System.Windows.Forms.Button();
             this.bt_createContentType = new System.Windows.Forms.Button();
             this.btn_createSiteColumn = new System.Windows.Forms.Button();
             this.btn_createLibrary = new System.Windows.Forms.Button();
@@ -62,16 +61,6 @@
             this.richTextBox1.Size = new System.Drawing.Size(801, 473);
             this.richTextBox1.TabIndex = 6;
             this.richTextBox1.Text = "";
-            // 
-            // test_btn
-            // 
-            this.test_btn.Location = new System.Drawing.Point(28, 70);
-            this.test_btn.Name = "test_btn";
-            this.test_btn.Size = new System.Drawing.Size(82, 32);
-            this.test_btn.TabIndex = 8;
-            this.test_btn.Text = "Test";
-            this.test_btn.UseVisualStyleBackColor = true;
-            this.test_btn.Click += new System.EventHandler(this.test_btn_Click);
             // 
             // bt_createContentType
             // 
@@ -144,7 +133,6 @@
             this.Controls.Add(this.btn_createLibrary);
             this.Controls.Add(this.btn_createSiteColumn);
             this.Controls.Add(this.bt_createContentType);
-            this.Controls.Add(this.test_btn);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.buttonBrowse);
             this.Name = "Form1";
@@ -159,7 +147,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog2;
         private System.Windows.Forms.Button buttonBrowse;
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.Button test_btn;
         private System.Windows.Forms.Button bt_createContentType;
         private System.Windows.Forms.Button btn_createSiteColumn;
         private System.Windows.Forms.Button btn_createLibrary;
