@@ -23,7 +23,14 @@ namespace ContentTypeExtractor
         SharePoitnOnlineManager spManager = null;
         string result = string.Empty;
 
-        StringBuilder testlibName = new StringBuilder("testLib");
+        const string ContentTypeSheetName = "Library Mapping";
+        const string LibrarySheetName = "Library Mapping";
+        const string SiteColumnSheetName = "DFTC Content Types";
+
+       const int ContentStartRow = 3;
+       const int SiteStartRow = 2;
+       const int LibraryStartRow = 12;
+
         public Form1(SharePoitnOnlineManager spManager)
         {
             this.spManager = spManager;
@@ -219,9 +226,9 @@ namespace ContentTypeExtractor
             if (excel != null)
             {
                 this.richTextBox1.AppendText("Loading data to show into the lists\n");
-                this.listContent.DataSource = LoadDataFromSheet(3,1, "Library Mapping");
-                this.listSite.DataSource = LoadDataFromSheet(2,2, "DFTC Content Types");
-                this.listLib.DataSource = LoadDataFromSheet(12,1, "Library Mapping");
+                this.listContent.DataSource = LoadDataFromSheet(ContentStartRow,1, ContentTypeSheetName);
+                this.listSite.DataSource = LoadDataFromSheet(SiteStartRow,2, SiteColumnSheetName);
+                this.listLib.DataSource = LoadDataFromSheet(LibraryStartRow,1, LibrarySheetName);
                 ClearAllSelected();
                 this.richTextBox1.AppendText("Finnished ----------\n");
             }
@@ -232,50 +239,45 @@ namespace ContentTypeExtractor
             ToggleAllButtons(true);
         }
 
-        private void Form1_Closing(object sender, CancelEventArgs e)
-        {
-            excel.ReleaseFileResources();
-        }
-
         private void bt_createContentType_Click(object sender, EventArgs e)
         {
             ToggleAllButtons();
-            PreProcessing(3, "Library Mapping", CreateContentTypes);
+            PreProcessing(ContentStartRow, ContentTypeSheetName, CreateContentTypes);
             ToggleAllButtons(true);
         }
 
         private void btn_createSiteColumn_Click(object sender, EventArgs e)
         {
             ToggleAllButtons();
-            PreProcessing(2, "DFTC Content Types", CreateColumnsInContentType);
+            PreProcessing(SiteStartRow, SiteColumnSheetName, CreateColumnsInContentType);
             ToggleAllButtons(true);
         }
 
         private void btn_createLibrary_Click(object sender, EventArgs e)
         {
             ToggleAllButtons();
-            PreProcessing(12, "Library Mapping", CreateLibrary);
+            PreProcessing(LibraryStartRow, LibrarySheetName, CreateLibrary);
             ToggleAllButtons(true);
         }
 
         private void btn_deleteContentTypes_Click(object sender, EventArgs e)
         {
             ToggleAllButtons();
-            PreProcessing(3, "Library Mapping", RemoveContentTypes);
+            PreProcessing(ContentStartRow, ContentTypeSheetName, RemoveContentTypes);
             ToggleAllButtons(true);
         }
 
         private void btn_deleteSiteColumn_Click(object sender, EventArgs e)
         {
             ToggleAllButtons();
-            PreProcessing(2, "DFTC Content Types", RemoveSiteColmun);
+            PreProcessing(SiteStartRow, SiteColumnSheetName, RemoveSiteColmun);
             ToggleAllButtons(true);
         }
 
         private void btn_deleteLibrary_Click(object sender, EventArgs e)
         {
             ToggleAllButtons();
-            PreProcessing(13, "Library Mapping", RemoveLibrary);
+            PreProcessing(LibraryStartRow, LibrarySheetName, RemoveLibrary);
             ToggleAllButtons(true);
         }
 
@@ -330,9 +332,9 @@ namespace ContentTypeExtractor
             base.OnFormClosing(e);
             if(excel != null)
             {
-                spManager.Dispose();
                 excel.ReleaseFileResources();
             }
+                spManager.Dispose();
         }
 
         private void ToggleAllButtons(bool flag = false)
