@@ -52,33 +52,10 @@ namespace ContentTypeExtractor
                 this.richTextBox1.AppendText("File Dialog can't be opened \n");
             }
         }
-        private void CreateContentTypes(int rowStart, Excel.Worksheet xlWorkSheet)
-        {
-            List<string> ContentTypes = spManager.GetContentTypesName(out result);
-            /// if any result happens during retriving the data
-            this.richTextBox1.AppendText(result);
-            for (int iRow = rowStart; iRow <= xlWorkSheet.Rows.Count; iRow++)
-            {
-                if (xlWorkSheet.Cells[iRow, 1].value == null)
-                {
-                    break;      // BREAK LOOP.
-                }
-                else
-                {
-                    string contentTypeame = (string)xlWorkSheet.Cells[iRow, 1].value;
-                    string parentName = "Item";
-                    if (iRow > 3)
-                    {
-                        parentName = (string)xlWorkSheet.Cells[iRow, 2].value;
-                    }
-                    result = spManager.CreateContentType(contentTypeame, parentName);
-                    this.richTextBox1.AppendText(result);
-                }
-            }
-        }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            spManager.Dispose();
             base.OnFormClosing(e);
             if(excel != null)
             {
@@ -93,7 +70,7 @@ namespace ContentTypeExtractor
             this.richTextBox1.AppendText("Start Processing .... \n");
             if (excel != null)
             {
-                Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName("Sheet1");
+                Excel.Worksheet xlWorkSheet = excel.GetExcelSheetByName(sheetName);
                 this.richTextBox1.AppendText("retriving the data of the sheet .... \n");
                 DeleteItems(xlWorkSheet);
                 this.richTextBox1.AppendText("Finished ----------------------------\n");

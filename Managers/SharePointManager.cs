@@ -90,6 +90,7 @@ namespace ContentTypeExtractor
                 {
                     SetCredentials(username, password, domain);
                     context.Load(context.Web);
+                    context.ExecuteQuery();
                     result = $"Connected to {context.Url} using username : {username}\n";
                 }
                 else
@@ -498,20 +499,6 @@ namespace ContentTypeExtractor
                 return null;
             }
         }
-        public SP.Folder GetFolder(string name)
-        {
-            SP.Folder SubFolder = context.Web.GetFolderByServerRelativeUrl(URL + name);
-            context.Load(SubFolder);
-            string fileName = "FileName";
-            SP.File file = SubFolder.Files.Where(s => s.Name == "PLO-C-700001-103").FirstOrDefault();
-            context.Load(file);
-            //query.Query = "<Where><Contains><FieldRef Name=\"Title\" /><Value Type=\"Text\">" + fileName + "</Value></Contains></Where>";
-            //query.Folder = SubFolder;  // This should restrict the query to the subfolder
-            // context.ExecuteQuery();
-            // var x= SubFolder.Name;
-            //SP.ListItemCollection files = list.GetItems(query);
-            return SubFolder;
-        }
 
         /// <summary>
         ///  take library and item needed to be deleted
@@ -559,6 +546,10 @@ namespace ContentTypeExtractor
             }
         }
 
+        public void Dispose()
+        {
+            context.Dispose();
+        }
     }
 
 }

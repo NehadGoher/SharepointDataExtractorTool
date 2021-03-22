@@ -48,8 +48,7 @@ namespace ContentTypeExtractor
                 {
                     this.label_status.ForeColor = Color.Red;
                     this.label_status.Text = res;
-                }
-                
+                } 
             }
         }
 

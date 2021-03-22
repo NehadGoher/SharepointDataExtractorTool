@@ -40,7 +40,7 @@
             // 
             // buttonBrowse
             // 
-            this.buttonBrowse.Location = new System.Drawing.Point(28, 25);
+            this.buttonBrowse.Location = new System.Drawing.Point(12, 25);
             this.buttonBrowse.Name = "buttonBrowse";
             this.buttonBrowse.Size = new System.Drawing.Size(82, 39);
             this.buttonBrowse.TabIndex = 0;
@@ -50,16 +50,16 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(28, 108);
+            this.richTextBox1.Location = new System.Drawing.Point(12, 108);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(414, 473);
+            this.richTextBox1.Size = new System.Drawing.Size(448, 576);
             this.richTextBox1.TabIndex = 6;
             this.richTextBox1.Text = "";
             // 
             // btn_loadList
             // 
-            this.btn_loadList.Location = new System.Drawing.Point(336, 25);
+            this.btn_loadList.Location = new System.Drawing.Point(354, 25);
             this.btn_loadList.Name = "btn_loadList";
             this.btn_loadList.Size = new System.Drawing.Size(106, 39);
             this.btn_loadList.TabIndex = 9;
@@ -71,7 +71,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(472, 611);
+            this.ClientSize = new System.Drawing.Size(472, 696);
             this.Controls.Add(this.btn_loadList);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.buttonBrowse);
