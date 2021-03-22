@@ -214,6 +214,7 @@ namespace ContentTypeExtractor
         private void Form1_Closing(object sender, CancelEventArgs e)
         {
             excel.ReleaseFileResources();
+            spManager.Dispose();
         }
 
         private void bt_createContentType_Click(object sender, EventArgs e)

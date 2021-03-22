@@ -29,9 +29,9 @@ namespace ContentTypeExtractor
         {
             if (ValidateInputs())
             {
+                this.label_status.Text = "Connecting .....";
                 SharePointOnlineManager manager = new SharePointOnlineManager(url);
                 
-                this.label_status.Text = "Connecting .....";
                 if (manager.ConnectToSharePoint(username,password,out string res))
                 {
                     this.Hide();
