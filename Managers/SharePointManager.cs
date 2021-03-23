@@ -526,13 +526,27 @@ namespace ContentTypeExtractor
                 if(listItems != null && listItems.Count()>0)
                 {
                     // delete all the reference of the file
-                    foreach (var listitem in listItems)
+                    var file = listItems.FirstOrDefault();
+                    
+                    if (file != null)
                     {
-                        listitem.DeleteObject();
+                        file.DeleteObject();
                         context.ExecuteQuery();
+                        result = $"Document: {item} successfully deleted\n";
+                        return true;
                     }
-                    result = $"Document: {item} successfully deleted\n";
-                    return true;
+                    else
+                    {
+                        result = $"Document: {item} failed to delete\n";
+                        return false;
+                    }
+                    //foreach (var listitem in listItems)
+                    //{
+                    //    listitem.DeleteObject();
+                    //    context.ExecuteQuery();
+                    //}
+                    //result = $"Document: {item} successfully deleted\n";
+                    //return true;
                 }
 
                 result = $"Document: {item} doesn't exist\n";

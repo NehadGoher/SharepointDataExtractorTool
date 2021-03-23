@@ -23,16 +23,13 @@ namespace ContentTypeExtractor
         SharePointManager spManager = null;
         string result = string.Empty;
 
-        //StringBuilder testlibName = new StringBuilder("testLib");
         public Form1(SharePointManager spManager)
         {
             this.spManager = spManager;
             InitializeComponent();
-            //spManager.ConnectToSharePoint("nehad.goher@mylinkdev.onmicrosoft.com","Neh@d123",out result);
             this.richTextBox1.AppendText(result);
-
-
         }
+
         string specifyList = "As_Is_Documents_Reference";
         string sheetName = "Sheet1";
         int rowStart = 2;
@@ -88,6 +85,7 @@ namespace ContentTypeExtractor
             this.richTextBox1.AppendText(result);
             SP.List lib = spManager.GetListByName(specifyList,out result);
             this.richTextBox1.AppendText(result);
+            this.richTextBox1.ScrollToCaret();
             if (lib!= null)
             {
                 for (int iRow = rowStart; iRow <= total; iRow++)
@@ -99,9 +97,11 @@ namespace ContentTypeExtractor
                         var success = spManager.DeleteItemFromFolder(lib, item.Trim(), out result);
                         if (success) totalDeleted++;
                         this.richTextBox1.AppendText(result);
+                        this.richTextBox1.ScrollToCaret();
                     }
                 }
                 this.richTextBox1.AppendText($"Deleted : {totalDeleted} / { total-1}\n");
+                this.richTextBox1.ScrollToCaret();
             }
         }
     }
