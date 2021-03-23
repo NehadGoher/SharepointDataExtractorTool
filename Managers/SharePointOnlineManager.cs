@@ -191,7 +191,9 @@ namespace ContentTypeExtractor
                             $@"Required=""{isRequired}"" Group=""{group}"" />";
 
                         SP.Field _field = flds.AddFieldAsXml(fieldAsXml, true, SP.AddFieldOptions.DefaultValue);
+                        _field.Title = siteColumnName;
                         context.Load(_field);
+                        
                         SP.FieldLinkCreationInformation link = new SP.FieldLinkCreationInformation { Field = _field };
                         /// link  column to content type
                         var cntTyp = cts.Where(s => s.Name ==contentTypeName).FirstOrDefault();
@@ -209,7 +211,6 @@ namespace ContentTypeExtractor
                     else
                     {
                         return $"Content type : {contentTypeName} not exists \n";
-
                     }
                 }
             }

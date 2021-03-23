@@ -53,6 +53,7 @@ namespace ContentTypeExtractor
                 this.richTextBox1.AppendText("File Dialog can't be opened \n");
             }
         }
+
         private void CreateContentTypes(int rowStart, Excel.Worksheet xlWorkSheet)
         {
             List<string> ContentTypes = spManager.GetContentTypesName(out result);
